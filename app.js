@@ -3,6 +3,8 @@ const app = express()
 const port = 5000
 const path = require('path')
 const ejs = require('express-ejs-layouts')
+const router = require('./routes/router')
+const bodyParser = require('body-parser')
 
 //Static files
 app.use(express.static('public'))
@@ -11,12 +13,14 @@ app.use(express.static('public'))
 app.set('views', './views')
 app.set('view engine', 'ejs')
 
+//Body parser
+app.use(bodyParser.urlencoded({ extended: true }))
+
+
 //Routes
-app.get('/', (req,res) => {
-    res.render('index.ejs')
-})
+app.use('/', router)
 app.all("*", (req,res) => {
-    res.status(400).send("Error 404 Not Found")
+    res.status(400).send("Error 404 not found...")
 })
 
 
