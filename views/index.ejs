@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Source+Serif+Pro&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dosis:wght@300&display=swap" rel="stylesheet">
 </head>
 <body>
     <h1 class="secret">Secret.</h1>
@@ -39,7 +40,7 @@
                 <form id="register-form" action="/" method="POST">
                     <div class="mb-3">
                         <label for="exampleInputUsername1" class="form-label">Username</label>
-                        <input type="text" name="username" class="form-control" id="exampleInputUsername1" aria-label="Username" aria-describedby="basic-addon1" required>
+                        <input type="text" name="username" class="form-control" id="exampleInputUsername1" aria-label="Username" aria-describedby="basic-addon1" minlength="3" required>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputEmail1" class="form-label">Email address</label>
@@ -48,13 +49,16 @@
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword1" class="form-label">Password</label>
-                        <input type="password" name="signPass" class="form-control" id="exampleInputPassword1" required>
+                        <input type="password" name="signPass" class="form-control" id="exampleInputPassword1" minlength="8" required>
                     </div>
                     <div class="mb-3">
                         <label for="exampleInputPassword2" class="form-label">Re-type Password</label>
                         <input type="password" name="retypePass" class="form-control" id="exampleInputPassword2" required>
                     </div>
                     <button type="submit" class="btn btn-success">Sign Up</button>
+                    <% if(error) {%>
+                        <h3 class="error"><%- error %></h3>
+                    <% } %>
                 </form>
             </div>
         </div>
