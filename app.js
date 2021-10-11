@@ -5,6 +5,8 @@ const path = require('path')
 const ejs = require('express-ejs-layouts')
 const router = require('./routes/router')
 const bodyParser = require('body-parser')
+const cookieParser = require("cookie-parser");
+const sessions = require('express-session');
 
 //Static files
 app.use(express.static('public'))
@@ -15,7 +17,21 @@ app.set('view engine', 'ejs')
 
 //Body parser
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.json())
 
+
+const oneDay = 1000 * 60 * 60 * 24;
+
+//session middleware
+app.use(sessions({
+    secret: "GTrGAClDMNFz",
+    saveUninitialized:true,
+    cookie: { maxAge: oneDay },
+    resave: false
+}));
+
+// cookie parser middleware
+app.use(cookieParser());
 
 //Routes
 app.use('/', router)

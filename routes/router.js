@@ -3,15 +3,20 @@ const router = express.Router()
 const db = require('../mongodb/db')
 const uuid = require('uuid')
 const { ensureAuth, ensureGuest} = require('../middleware/logged')
-
+let ses;
 
 router.get('/', (req,res) => {
+    ses = req.session
+    if(ses.email){
+        res.redirect('/dashboard')
+    }else{
     res.render('index', {error: false})
+    }
 })
 router.post('/dashboard', async (req,res) => {
     try{
         await db.client.connect()
-        await db.login(db.client, req.body.loginEmail, req.body.loginPass, res)
+        await db.login(db.client, req.body.loginEmail, req.body.loginPass, req, res)
     }catch(err){
         console.log(err)
     }finally{
@@ -41,7 +46,11 @@ router.post('/', async (req,res) => {
     }
 })
 router.get('/dashboard', (req,res) => {
-    res.render("dashboard")
+    if(ses.email){
+        res.render('dashboard')
+    }else{
+        res.redirect('/')
+    }
 })
 
 
