@@ -2,6 +2,7 @@ const { MongoClient } = require('mongodb');
 const uri = "mongodb+srv://ragimov1:ragimov1123@cluster0.y9hfa.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 let session;
+let user = {}
 
 async function login(client, email, password, req, res){
     const result = await client.db("secret_db").collection("users").findOne({
@@ -11,8 +12,8 @@ async function login(client, email, password, req, res){
     if(result){
         session = req.session
         session.email = email
-        res.render('dashboard')
-        
+        user = result
+        res.render('dashboard', { username: user.username })
     }else{
         res.redirect('/')
     }
@@ -31,4 +32,4 @@ async function signup(client, data, res){
 }
 
 
-module.exports = { MongoClient, uri, client, login, signup, session}
+module.exports = { MongoClient, uri, client, login, signup, session, user}

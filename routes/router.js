@@ -46,11 +46,12 @@ router.post('/', async (req,res) => {
     }
 })
 router.get('/dashboard', (req,res) => {
-    if(ses.email){
+    /*if(ses.email){
         res.render('dashboard')
     }else{
         res.redirect('/')
-    }
+    }*/
+    res.render("dashboard")
 })
 
 

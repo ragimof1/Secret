@@ -1,1 +1,32 @@
-<h1>Dashboard</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-uWxY/CJNBR+1zjPWmfnSnVxwRheevXITnMqoEIeG1LJrdI0GlVs/9cVSyPYXdcSF" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@200&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cantarell&display=swap" rel="stylesheet">
+</head>
+<body>
+    <h1 class="dashboard">Dashboard</h1>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-8 grid-secret">
+                <% for(let i = 0; i < 1; i++) { %>
+                <%- include('partials/card') %>
+                <% } %>
+            </div>
+            <div class="col-4 profile">
+                <img src="/images/avtar.jpeg" alt="avatar" class="avatar">
+                <h3 class="username mt-3">ragimov1</h3>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
