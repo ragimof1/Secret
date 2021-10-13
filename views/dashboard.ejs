@@ -18,13 +18,23 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-8 grid-secret">
-                <% for(let i = 0; i < 1; i++) { %>
-                <%- include('partials/card') %>
+                <% if(secrets.secrets){ %>
+                    <% for(let i = 0; i < secrets.secrets.length; i++){ %>
+                        <div class="card secret-card">
+                            <div class="card-body">
+                                <h5 class="card-title mt-2"><%= secrets.secrets[i].title %></h5>
+                                <h6 class="card-subtitle mb-2 text-muted"><%= secrets.user %></h6>
+                                <p class="card-text mt-4"><%= secrets.secrets[i].shortText %></p>
+                            </div>
+                        </div>
+                    <% } %>
+                <% }else{ %>
+                    <h3>You don't have any secrets</h3>
                 <% } %>
             </div>
             <div class="col-4 profile">
                 <img src="/images/avtar.jpeg" alt="avatar" class="avatar">
-                <h3 class="username mt-3">ragimov1</h3>
+                <h3 class="username mt-3"><%= username %></h3>
             </div>
         </div>
     </div>

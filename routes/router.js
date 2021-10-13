@@ -45,15 +45,20 @@ router.post('/', async (req,res) => {
         db.client.close()
     }
 })
-router.get('/dashboard', (req,res) => {
-    /*if(ses.email){
-        res.render('dashboard')
-    }else{
-        res.redirect('/')
-    }*/
-    res.render("dashboard")
+router.get('/dashboard', async (req, res) => {
+    try{
+        await db.client.connect()
+        await db.secrets(db.client, req, res, ses)
+    }catch(err){
+        console.log(err)
+    }finally{
+        db.client.close()
+    }
 })
-
+router.get('/logout', (req,res) => {
+    ses.destroy()
+    res.redirect('/')
+})
 
 
 module.exports = router
