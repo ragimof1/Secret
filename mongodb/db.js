@@ -17,7 +17,6 @@ async function login(client, email, password, req, res){
         let secret = await client.db("secret_db").collection("secrets").findOne({ user: user.username })
         if(secret.secrets){
         res.render('dashboard', { username: user.username, secrets: secret })
-        console.log(secret)
         }else{
         res.render('dashboard', { username: user.username, secrets: false })
         console.log("not found")

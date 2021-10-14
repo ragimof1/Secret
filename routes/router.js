@@ -46,6 +46,7 @@ router.post('/', async (req,res) => {
     }
 })
 router.get('/dashboard', async (req, res) => {
+    if(ses.email){
     try{
         await db.client.connect()
         await db.secrets(db.client, req, res, ses)
@@ -54,9 +55,12 @@ router.get('/dashboard', async (req, res) => {
     }finally{
         db.client.close()
     }
+}else{
+    res.redirect('/')
+}
 })
-router.get('/logout', (req,res) => {
-    ses.destroy()
+router.get('/logout', async (req,res) => {
+    req.session.destroy()
     res.redirect('/')
 })
 
