@@ -13,10 +13,14 @@
     margin-top: 10px;
 }
 .secret-card{
-    height: 275px;
+    height: 300px;
     transition: 0.3s ease;
     cursor: pointer;
     width: 100%;
+}
+secret-card-body{
+    position: relative;
+    z-index: -1;
 }
 .secret-card h5{ font-size: 1.2rem; }
 .secret-card h6{ font-size: 0.9rem; }
@@ -50,11 +54,23 @@ img.avatar{
 }
 .add-icon{
     position: fixed;
- bottom:5px;
- right:5px;
+    bottom:5px;
+    right:5px;
     width: 7vw;
     height: 7vh;
 }
+.dots{
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    bottom: 10px;
+    right: 0;
+    border: none;
+    outline: 0;
+    background-color: transparent;
+    z-index: 1;
+}
+
 @media(max-width: 500px){
     .grid-secret{
         grid-template-columns: 1fr;

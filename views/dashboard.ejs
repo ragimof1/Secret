@@ -16,18 +16,22 @@
 </head>
 <body style="background-color: #eff0f3;">
     <%- include('partials/navbar') %>
-    <h1 class="dashboard">Dashboard</h1>
     <div class="container mt-5">
         <div class="row">
             <div class="col-8 grid-secret">
                 <% if(secrets.secrets){ %>
                     <% for(let i = secrets.secrets.length - 1; i >= 0; i--){ %>
                         <div class="card secret-card">
-                            <div class="card-body">
+                            <div class="card-body secret-card-body">
                                 <h5 class="card-title mt-2"><%= secrets.secrets[i].title %></h5>
                                 <h6 class="card-subtitle mb-2 text-muted"><%= secrets.user %></h6>
                                 <p class="card-text mt-4"><%= secrets.secrets[i].shortText %></p>
                             </div>
+                            <button class="dots">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"/>
+                            </svg>
+                            </button>
                         </div>
                     <% } %>
                 <% }else{ %>

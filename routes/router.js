@@ -46,18 +46,22 @@ router.post('/', async (req,res) => {
     }
 })
 router.get('/dashboard', async (req, res) => {
-    if(ses.email){
-    try{
-        await db.client.connect()
-        await db.secret(db.client, req, res, ses)
-    }catch(err){
-        console.log(err)
-    }finally{
-        db.client.close()
+    if(ses){
+        if(ses.email){
+            try{
+                await db.client.connect()
+                await db.secret(db.client, req, res, ses)
+            }catch(err){
+                console.log(err)
+            }finally{
+                db.client.close()
+            }
+        }else{
+            res.redirect('/')
+        }
+    }else{
+        res.redirect('/')
     }
-}else{
-    res.redirect('/')
-}
 })
 router.get('/logout', async (req,res) => {
     req.session.destroy()
@@ -65,7 +69,7 @@ router.get('/logout', async (req,res) => {
 })
 router.get('/add', (req,res) => {
     if(ses.email){
-        res.render('add', { page: 'Secret.' })
+        res.render('add', { page: 'Secret.', status: undefined })
     }else{
         res.redirect('/')
     }
@@ -74,7 +78,7 @@ router.post('/add', async (req,res) => {
     try{
         const title = req.body.title
         const secret = req.body.secret
-        const shortText = secret.split(" ").slice(0,30).join(" ").concat("...[]")
+        const shortText = secret.split(" ").slice(0,18).join(" ").concat("...[]")
         const id = uuid.v4()
         await db.client.connect()
         await db.addSecret(db.client, {
@@ -82,12 +86,18 @@ router.post('/add', async (req,res) => {
             title: title,
             shortText: shortText,
             fullText: secret
-        })
-        res.render("add", { page: "Secret. "})
+        }, res)
     }catch(err){
         console.log(err)
     }finally{
         db.client.close()
+    }
+})
+router.get('/feed', (req,res) => {
+    if(ses.email){
+        res.render("feed")
+    }else{
+        res.redirect('/')
     }
 })
 

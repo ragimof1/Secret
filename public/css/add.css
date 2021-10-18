@@ -12,3 +12,20 @@
 .header{
     font-family: 'Cinzel', serif;
 }
+.message{
+    float: right;
+    margin-top: 8px;
+    font-size: 1.4em;
+    font-family: 'Pontano Sans', sans-serif;
+}
+.success{
+    color: #4E9F3D;
+}
+.fail{
+    color: #FF2626;
+}
+@media (max-width: 500px) {
+    .message{
+    font-size: 1em;
+    }
+}

@@ -49,7 +49,7 @@ async function secret(client, req, res, session){
     }
 }
 
-async function addSecret(client, data){
+async function addSecret(client, data, res){
     const result = await client.db("secret_db").collection("secrets").updateOne({
         user: user.username
     }, {
@@ -64,8 +64,10 @@ async function addSecret(client, data){
     })
     if(result){
         console.log("Added new secret!")
+        res.render("add", { page: "Secret.", status: true })
     }else{
         console.log("Failed...")
+        res.render("add", { page: "Secret.", status: false })
     }
 }
 
