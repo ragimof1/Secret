@@ -61,7 +61,6 @@ async function addSecret(client, data){
                 fullText: data.fullText
             }
         },
-        $position: 0
     })
     if(result){
         console.log("Added new secret!")

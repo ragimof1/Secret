@@ -21,7 +21,7 @@
         <div class="row">
             <div class="col-8 grid-secret">
                 <% if(secrets.secrets){ %>
-                    <% for(let i = 0; i < secrets.secrets.length; i++){ %>
+                    <% for(let i = secrets.secrets.length - 1; i >= 0; i--){ %>
                         <div class="card secret-card">
                             <div class="card-body">
                                 <h5 class="card-title mt-2"><%= secrets.secrets[i].title %></h5>
