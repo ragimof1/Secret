@@ -3,12 +3,14 @@
     padding: 0;
     box-sizing: border-box;
 }
-body{ background-color: #eff0f3; }
 .dashboard{
     text-align: center;
     margin-top: 10px;
     font-family: 'IBM Plex Serif', serif;
     color: #212121;
+}
+.margin{
+    margin-top: 10px;
 }
 .secret-card{
     height: 275px;
@@ -39,6 +41,19 @@ body{ background-color: #eff0f3; }
 img.avatar{
     width: 20vw;
     border-radius: 50%;
+}
+.add-link,
+.add-link:hover,
+.add-link:active{
+    color: black;
+    cursor: pointer;
+}
+.add-icon{
+    position: fixed;
+ bottom:5px;
+ right:5px;
+    width: 7vw;
+    height: 7vh;
 }
 @media(max-width: 500px){
     .grid-secret{

@@ -49,7 +49,7 @@ router.get('/dashboard', async (req, res) => {
     if(ses.email){
     try{
         await db.client.connect()
-        await db.secrets(db.client, req, res, ses)
+        await db.secret(db.client, req, res, ses)
     }catch(err){
         console.log(err)
     }finally{
@@ -62,6 +62,33 @@ router.get('/dashboard', async (req, res) => {
 router.get('/logout', async (req,res) => {
     req.session.destroy()
     res.redirect('/')
+})
+router.get('/add', (req,res) => {
+    if(ses.email){
+        res.render('add', { page: 'Secret.' })
+    }else{
+        res.redirect('/')
+    }
+})
+router.post('/add', async (req,res) => {
+    try{
+        const title = req.body.title
+        const secret = req.body.secret
+        const shortText = secret.split(" ").slice(0,30).join(" ").concat("...[]")
+        const id = uuid.v4()
+        await db.client.connect()
+        await db.addSecret(db.client, {
+            id: id,
+            title: title,
+            shortText: shortText,
+            fullText: secret
+        })
+        res.render("add", { page: "Secret. "})
+    }catch(err){
+        console.log(err)
+    }finally{
+        db.client.close()
+    }
 })
 
 

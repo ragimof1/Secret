@@ -5,6 +5,18 @@ let session;
 let user = {}
 
 
+async function signup(client, data, res){
+    const email = await client.db("secret_db").collection("users").findOne({ email: data.email })
+    const username = await client.db("secret_db").collection("users").findOne({ username: data.username })
+    if(email || username){
+        console.log("Error")
+        res.render("index", {error: "This user already exists."})
+    }else{
+        await client.db("secret_db").collection("users").insertOne(data)
+        await client.db("secret_db").collection("secrets").insertOne({ user: data.username, secrets: [] })
+        res.render("index", {error: false})
+    }
+}
 async function login(client, email, password, req, res){
     const result = await client.db("secret_db").collection("users").findOne({
         email: email,
@@ -16,40 +28,48 @@ async function login(client, email, password, req, res){
         user = result
         let secret = await client.db("secret_db").collection("secrets").findOne({ user: user.username })
         if(secret.secrets){
-        res.render('dashboard', { username: user.username, secrets: secret })
+        res.render('dashboard', { username: user.username, secrets: secret, page: 'Dashboard' })
         }else{
-        res.render('dashboard', { username: user.username, secrets: false })
-        console.log("not found")
+        res.render('dashboard', { username: user.username, secrets: false, page: 'Dashboard' })
         }
     }else{
         res.redirect('/')
     }
 }
-async function secrets(client, req, res, session){
+async function secret(client, req, res, session){
     if(user.username){
         let secret = await client.db("secret_db").collection("secrets").findOne({ user: user.username })
         if(secret.secrets){
-            res.render("dashboard", { username: user.username, secrets: secret })
+            res.render("dashboard", { username: user.username, secrets: secret, page: 'Dashboard' })
         }else{
-            res.render("dashboard", { username: user.username, secrets: false })
+            res.render("dashboard", { username: user.username, secrets: false, page: 'Dashboard' })
         }
     }else{
         res.redirect("/")
     }
 }
 
-async function signup(client, data, res){
-    const email = await client.db("secret_db").collection("users").findOne({ email: data.email })
-    const username = await client.db("secret_db").collection("users").findOne({ username: data.username })
-    if(email || username){
-        console.log("Error")
-        res.render("index", {error: "This user already exists."})
+async function addSecret(client, data){
+    const result = await client.db("secret_db").collection("secrets").updateOne({
+        user: user.username
+    }, {
+        $push: {
+            secrets: {
+                id: data.id,
+                title: data.title,
+                shortText: data.shortText,
+                fullText: data.fullText
+            }
+        },
+        $position: 0
+    })
+    if(result){
+        console.log("Added new secret!")
     }else{
-        await client.db("secret_db").collection("users").insertOne(data)
-        res.render("index", {error: false})
+        console.log("Failed...")
     }
 }
 
 
 
-module.exports = { MongoClient, uri, client, login, signup, secrets, session, user}
+module.exports = { MongoClient, uri, client, login, signup, secret, addSecret, session, user}
