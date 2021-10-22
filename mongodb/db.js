@@ -9,7 +9,6 @@ async function signup(client, data, res){
     const email = await client.db("secret_db").collection("users").findOne({ email: data.email })
     const username = await client.db("secret_db").collection("users").findOne({ username: data.username })
     if(email || username){
-        console.log("Error")
         res.render("index", {error: "This user already exists."})
     }else{
         await client.db("secret_db").collection("users").insertOne(data)
@@ -36,7 +35,7 @@ async function login(client, email, password, req, res){
         res.redirect('/')
     }
 }
-async function secret(client, req, res, session){
+async function secrets(client, req, res, session){
     if(user.username){
         const cursor = await client.db("secret_db").collection("secrets").find({ user: user.username })
         const secret = await cursor.toArray()
@@ -54,7 +53,6 @@ async function feed(client, res){
         const cursor = client.db("secret_db").collection("secrets").find({})
         const secrets = await cursor.toArray();
         res.render("feed", { page: "Feed", secrets: secrets })
-        console.log(secrets)
     }else{
         res.redirect('/')
     }
@@ -68,11 +66,21 @@ async function addSecret(client, data, res){
         fullText: data.fullText
     })
     if(result){
-        console.log("Added new secret!")
         res.render("add", { page: "Secret.", status: true })
     }else{
-        console.log("Failed...")
         res.render("add", { page: "Secret.", status: false })
+    }
+}
+async function secret(client, id, res){
+    if(user.username){
+        const result = await client.db("secret_db").collection("secrets").findOne({ id: id })
+        if(result){
+            res.render('secret', { page: 'Secret.', secret: result })
+        }else{
+            res.send("Couldn't find secret...")
+        }
+    }else{
+        res.redirect('/')
     }
 }
 function logout(req,res){
@@ -87,7 +95,6 @@ async function remove(client, id, res){
         await client.db("secret_db").collection("secrets").deleteOne({ user: user.username, id: id })
         res.redirect('/dashboard')
     }else{
-        console.log("error")
         res.send('Error')
     }
     }else{
@@ -95,4 +102,4 @@ async function remove(client, id, res){
     }
 }
 
-module.exports = { MongoClient, uri, client, login, signup, addSecret, secret, remove, feed, logout, session, user}
+module.exports = { MongoClient, uri, client, login, signup, addSecret, secrets, secret, remove, feed, logout, session, user}

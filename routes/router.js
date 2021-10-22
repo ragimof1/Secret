@@ -50,7 +50,7 @@ router.get('/dashboard', async (req, res) => {
         if(ses.email){
             try{
                 await db.client.connect()
-                await db.secret(db.client, req, res, ses)
+                await db.secrets(db.client, req, res, ses)
             }catch(err){
                 console.log(err)
             }finally{
@@ -103,16 +103,15 @@ router.get('/feed', async(req,res) => {
         db.client.close()
     }
 })
-router.get('/secret/:id', (req,res) => {
-    let id = req.params.id
-    if(ses){
-        if(ses.email){
-            res.render('secret')
-        }else{
-            res.redirect('/')
-        }
-    }else{
-        res.redirect("/")
+router.get('/secret/:id', async (req,res) => {
+    try{
+        let id = req.params.id
+        await db.client.connect()
+        await db.secret(db.client, id, res)
+    }catch(err){
+        console.log(err)
+    }finally{
+        db.client.close()
     }
 })
 router.get('/delete/:id', async (req,res) => {
