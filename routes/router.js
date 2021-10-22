@@ -63,13 +63,13 @@ router.get('/dashboard', async (req, res) => {
         res.redirect('/')
     }
 })
-router.get('/logout', async (req,res) => {
-    req.session.destroy()
-    res.redirect('/')
-})
 router.get('/add', (req,res) => {
-    if(ses.email){
+    if(ses){
+        if(ses.email){
         res.render('add', { page: 'Secret.', status: undefined })
+        }else{
+            res.redirect('/')
+        }
     }else{
         res.redirect('/')
     }
@@ -93,13 +93,40 @@ router.post('/add', async (req,res) => {
         db.client.close()
     }
 })
-router.get('/feed', (req,res) => {
-    if(ses.email){
-        res.render("feed")
-    }else{
-        res.redirect('/')
+router.get('/feed', async(req,res) => {
+    try{
+        await db.client.connect()
+        await db.feed(db.client, res)
+    }catch(err){
+        console.log(err)
+    }finally{
+        db.client.close()
     }
 })
-
-
+router.get('/secret/:id', (req,res) => {
+    let id = req.params.id
+    if(ses){
+        if(ses.email){
+            res.render('secret')
+        }else{
+            res.redirect('/')
+        }
+    }else{
+        res.redirect("/")
+    }
+})
+router.get('/delete/:id', async (req,res) => {
+    try {
+        let id = req.params.id
+        await db.client.connect()
+        await db.remove(db.client, id, res)
+    } catch (error) {
+        console.log(error)
+    } finally {
+        db.client.close()
+    }
+})
+router.get('/logout', (req,res) => {
+    db.logout(req,res)
+})
 module.exports = router

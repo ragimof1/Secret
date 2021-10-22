@@ -13,7 +13,6 @@ async function signup(client, data, res){
         res.render("index", {error: "This user already exists."})
     }else{
         await client.db("secret_db").collection("users").insertOne(data)
-        await client.db("secret_db").collection("secrets").insertOne({ user: data.username, secrets: [] })
         res.render("index", {error: false})
     }
 }
@@ -26,11 +25,12 @@ async function login(client, email, password, req, res){
         session = req.session
         session.email = email
         user = result
-        let secret = await client.db("secret_db").collection("secrets").findOne({ user: user.username })
-        if(secret.secrets){
-        res.render('dashboard', { username: user.username, secrets: secret, page: 'Dashboard' })
+        const cursor = await client.db("secret_db").collection("secrets").find({ user: user.username })
+        const secret = await cursor.toArray()
+        if(secret.join("") === ""){
+            res.render("dashboard", { username: user.username, secrets: false, page: 'Dashboard' })
         }else{
-        res.render('dashboard', { username: user.username, secrets: false, page: 'Dashboard' })
+            res.render('dashboard', { username: user.username, secrets: secret, page: 'Dashboard' })
         }
     }else{
         res.redirect('/')
@@ -38,29 +38,34 @@ async function login(client, email, password, req, res){
 }
 async function secret(client, req, res, session){
     if(user.username){
-        let secret = await client.db("secret_db").collection("secrets").findOne({ user: user.username })
-        if(secret.secrets){
-            res.render("dashboard", { username: user.username, secrets: secret, page: 'Dashboard' })
-        }else{
+        const cursor = await client.db("secret_db").collection("secrets").find({ user: user.username })
+        const secret = await cursor.toArray()
+        if(secret.join("") === ""){
             res.render("dashboard", { username: user.username, secrets: false, page: 'Dashboard' })
+        }else{
+            res.render('dashboard', { username: user.username, secrets: secret, page: 'Dashboard' })
         }
     }else{
         res.redirect("/")
     }
 }
-
+async function feed(client, res){
+    if(user.email){
+        const cursor = client.db("secret_db").collection("secrets").find({})
+        const secrets = await cursor.toArray();
+        res.render("feed", { page: "Feed", secrets: secrets })
+        console.log(secrets)
+    }else{
+        res.redirect('/')
+    }
+}
 async function addSecret(client, data, res){
-    const result = await client.db("secret_db").collection("secrets").updateOne({
-        user: user.username
-    }, {
-        $push: {
-            secrets: {
-                id: data.id,
-                title: data.title,
-                shortText: data.shortText,
-                fullText: data.fullText
-            }
-        },
+    const result = await client.db("secret_db").collection("secrets").insertOne({
+        id: data.id,
+        user: user.username,
+        title: data.title,
+        shortText: data.shortText,
+        fullText: data.fullText
     })
     if(result){
         console.log("Added new secret!")
@@ -70,7 +75,24 @@ async function addSecret(client, data, res){
         res.render("add", { page: "Secret.", status: false })
     }
 }
+function logout(req,res){
+    user = {}
+    req.session.destroy()
+    res.redirect('/')
+}
+async function remove(client, id, res){
+    if(user.email){
+    const result = await client.db("secret_db").collection("secrets").findOne({ user: user.username, id: id })
+    if(result){
+        await client.db("secret_db").collection("secrets").deleteOne({ user: user.username, id: id })
+        res.redirect('/dashboard')
+    }else{
+        console.log("error")
+        res.send('Error')
+    }
+    }else{
+        res.redirect('/')
+    }
+}
 
-
-
-module.exports = { MongoClient, uri, client, login, signup, secret, addSecret, session, user}
+module.exports = { MongoClient, uri, client, login, signup, addSecret, secret, remove, feed, logout, session, user}

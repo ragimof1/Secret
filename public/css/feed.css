@@ -1,0 +1,31 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.margin{
+    margin-top: 10px;
+}
+.secret-card{
+    height: 300px;
+    transition: 0.3s ease;
+    cursor: pointer;
+    width: 100%;
+}
+secret-card-body{
+    position: relative;
+    z-index: -1;
+}
+.secret-card h5{ font-size: 1.2rem; }
+.secret-card h6{ font-size: 0.9rem; }
+.secret-card p { font-size: 0.9rem; }
+.secret-card:hover{
+    transform: translateY(-6px);
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.grid-secret{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    justify-items: center;
+    grid-gap: 40px;
+}
